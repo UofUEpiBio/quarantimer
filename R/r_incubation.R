@@ -7,6 +7,8 @@
 #'
 #' @return A vector of random incubation time
 #'
+#' @importFrom stats rlnorm
+#'
 #' @examples
 #' r_incubation(10)
 #'

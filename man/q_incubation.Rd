@@ -20,8 +20,10 @@ A vector of quantiles corresponding to the probability input
 Quantile function for an incubation period model
 }
 \examples{
-q_incubation(0.5) # median incubation period
+# median incubation period:
+q_incubation(0.5)
 
-q_incubation(0.25, "morgenstern_2026") # 25th percentile incubation period under the Morgenstern 2026 model
+# 25th percentile incubation period under the Morgenstern 2026 model:
+q_incubation(0.25, "morgenstern_2026")
 
 }

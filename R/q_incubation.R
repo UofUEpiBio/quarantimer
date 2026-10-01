@@ -7,10 +7,14 @@
 #'
 #' @return A vector of quantiles corresponding to the probability input
 #'
-#' @examples
-#' q_incubation(0.5) # median incubation period
+#' @importFrom stats qlnorm
 #'
-#' q_incubation(0.25, "morgenstern_2026") # 25th percentile incubation period under the Morgenstern 2026 model
+#' @examples
+#' # median incubation period:
+#' q_incubation(0.5)
+#'
+#' # 25th percentile incubation period under the Morgenstern 2026 model:
+#' q_incubation(0.25, "morgenstern_2026")
 #'
 #' @export
 q_incubation <- function(p, model = "lessler_2009") {

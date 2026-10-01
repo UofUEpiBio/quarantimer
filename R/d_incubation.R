@@ -7,6 +7,8 @@
 #'
 #' @return A vector of densities corresponding to the probability input
 #'
+#' @importFrom stats dlnorm
+#'
 #' @examples
 #' d_incubation(10)
 #'

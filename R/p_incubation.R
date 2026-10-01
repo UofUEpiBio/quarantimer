@@ -7,6 +7,8 @@
 #'
 #' @return A vector of probabilities corresponding to the quantile input: the probability that the incubation time is less q
 #'
+#' @importFrom stats plnorm
+#'
 #' @examples
 #' p_incubation(14)
 #'
