@@ -5,3 +5,8 @@
 .httr-oauth
 .DS_Store
 .quarto
+*.Rcheck/
+*.tar.gz
+vignettes/model.html
+vignettes/model.pdf
+vignettes/model_files/

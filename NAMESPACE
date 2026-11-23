@@ -3,6 +3,8 @@
 export(d_incubation)
 export(incubation_model)
 export(p_incubation)
+export(plot_incubation)
+export(plot_incubation_data)
 export(q_incubation)
 export(r_incubation)
 importFrom(stats,dlnorm)

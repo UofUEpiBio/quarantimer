@@ -1,19 +1,20 @@
-#' Density function for an incubation period model
+#' Density for the incubation period
 #'
-#' @param t vector of quantiles
-#' @param model A character string specifying the incubation period model.
-#'   Must be one of \code{"lessler_2009"} or \code{"morgenstern_2026"}.
-#'   Defaults to \code{"lessler_2009"}.
+#' The distribution describes time from infection to symptom onset among
+#' infected individuals who develop symptoms. It is not an infection probability
+#' or a distribution of time to infectiousness.
 #'
-#' @return A vector of densities corresponding to the probability input
-#'
+#' @param t Numeric vector of times in days since infection.
+#' @inheritParams incubation_model
+#' @return Numeric vector of densities (per day). Missing values propagate.
+#' @details Uses the corresponding lognormal function in [stats::Lognormal].
+#'   See [incubation_model()] for parameter provenance and assumptions.
+#' @seealso [incubation_model()], [d_incubation()], [p_incubation()],
+#'   [q_incubation()], [r_incubation()], [plot_incubation()]
 #' @importFrom stats dlnorm
-#'
 #' @examples
-#' d_incubation(10)
-#'
-#' d_incubation(10, "morgenstern_2026")
-#'
+#' d_incubation(c(10, 14))
+#' d_incubation(14, model = "morgenstern_2026")
 #' @export
 d_incubation <- function(t, model = "lessler_2009") {
   inc <- incubation_model(model)

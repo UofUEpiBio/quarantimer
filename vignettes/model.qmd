@@ -1,0 +1,146 @@
+---
+title: "Incubation times and symptom-based risk updates"
+format:
+  html:
+    embed-resources: true
+  pdf:
+    fontsize: 10pt
+    geometry: margin=0.8in
+execute:
+  echo: true
+---
+
+## Implemented incubation model
+
+The package describes time from infection to symptom onset among infected
+individuals who develop symptoms. Time is measured in days; infection occurs at
+time zero. A single known infection time and complete ascertainment of symptom
+onset are assumed. Incubation is distinct from the latent period (time to
+infectiousness). Neither transmission risk nor quarantine effectiveness follows
+from an incubation distribution alone.
+
+Let $T$ have support $\mathcal{T}=(0,\infty)$ and let
+$\theta=(\mu,\sigma)$ be fixed model parameters. The implemented model is
+$\log T\sim N(\mu,\sigma^2)$, with density and cumulative distribution
+$$
+f(t;\theta)=\frac{1}{t\sigma\sqrt{2\pi}}
+\exp\left[-\frac{(\log t-\mu)^2}{2\sigma^2}\right],\qquad
+F(t;\theta)=\mathrm{Pr}_{\mathcal{T}}(T\leq t;\theta)
+=\Phi\left(\frac{\log t-\mu}{\sigma}\right).
+$$
+For $t\leq0$, both density and cumulative probability are zero.
+The survival function is $S(t;\theta)=1-F(t;\theta)$ and
+$Q(p;\theta)=\exp\{\mu+\sigma\Phi^{-1}(p)\}$ for $0<p<1$.
+Thus the median is $e^\mu$, the mean is
+$\mathrm{E}_{\mathcal{T}}(T;\theta)=e^{\mu+\sigma^2/2}$,
+and $\sigma$ is a standard deviation on the log scale.
+
+| Identifier | $\mu$ | $\sigma$ |
+|:--|--:|--:|
+| `lessler_2009` | 2.526 | 0.207 |
+| `morgenstern_2026` | 2.62 | 0.23 |
+
+The default agrees with the measles median (12.5 days) and dispersion factor
+(1.23) reported by Lessler et al. (2009). Dispersion here means $e^\sigma$.
+The alternative identifier and parameter values come from the original package
+implementation; a publication supporting that parameterization has not been
+established. Treat it as a sensitivity scenario, without assuming an independently
+validated symptom endpoint.
+
+```{r}
+library(quarantimer)
+q_incubation(c(0.5, 0.95))
+p_incubation(14)
+```
+
+The density, CDF, quantile and simulation interfaces are respectively
+`d_incubation()`, `p_incubation()`, `q_incubation()`, and
+`r_incubation()`. They delegate to R's lognormal functions.
+No parameters are fitted and parameter uncertainty is not propagated.
+
+## Conditioning on continued absence of symptoms
+
+Among individuals known to be infected and destined to develop symptoms, the
+probability of onset between days $t$ and $t+h$, given no onset by day $t$, is
+$$
+\mathrm{Pr}_{\mathcal{T}}(t<T\leq t+h\mid T>t;\theta)
+=\frac{F(t+h;\theta)-F(t;\theta)}{S(t;\theta)}.
+$$
+This quantity differs from the probability that an exposed person is infected.
+For that question introduce $I\in\{0,1\}$ and a specified pre-observation
+infection probability $\pi$. Suppose every infected person eventually develops
+the modeled symptoms, uninfected people never develop those symptoms, and
+observation is perfect. Write $A_t$ for no symptoms by time $t$.
+Bayes' rule then gives, on the joint support $\mathcal{Y}$ of infection and onset,
+$$
+\mathrm{Pr}_{\mathcal{Y}}(I=1\mid A_t;\pi,\theta)
+=\frac{\pi S(t;\theta)}{1-\pi+\pi S(t;\theta)}.
+$$
+The denominator is the probability of the observed symptom-free history.
+The following is a transparent calculation using the package, not a fitted
+exposure model or a dedicated risk-update API.
+
+```{r}
+pi <- 0.1 # illustrative assumed infection probability
+t <- 14
+s <- 1 - p_incubation(t)
+pi * s / (1 - pi + pi * s)
+```
+
+For extreme tails use `stats::plnorm(t, meanlog, sdlog, lower.tail = FALSE)`
+with parameters from `incubation_model()` to avoid subtractive cancellation.
+A nonzero asymptomatic fraction would change the likelihood of $A_t$;
+the displayed update would then be inappropriate without modification.
+
+## Multiple contacts and additional evidence
+
+For independent contacts with fixed prior probabilities $\pi_i$, define
+$r_i(t)$ by the preceding update. Conditional independence implies that the
+probability at least one remains infected is $1-\prod_i[1-r_i(t)]$.
+Shared uncertainty in source infectiousness generally makes contacts dependent,
+so this product cannot simply be used after marginalizing shared parameters.
+
+An extended exposure model could specify
+$\pi_i=1-\exp(-\lambda w_i)$ with fixed exposure weights $w_i\geq0$ and
+unknown intensity $\lambda\geq0$. Under conditional independence, contacts with
+observed onset times $t_i$ contribute $\pi_i f(t_i;\theta)$ to a likelihood;
+contacts without symptoms through $c_i$ contribute
+$1-\pi_i+\pi_i S(c_i;\theta)$. This provides a route to updating shared
+exposure intensity as observations accumulate. These likelihood and exposure
+components are mathematical extensions, not implemented estimators.
+
+Negative tests additionally require time-dependent test sensitivity, specificity,
+and assumptions about dependence between repeated tests and symptoms.
+Unknown exposure times require integrating over possible infection times.
+Infectiousness and onward transmission require a separate disease progression
+model. The current package supplies none of those components and does not
+optimize quarantine duration.
+
+## Synthetic observations and visual checks
+
+`incubation_example` contains 200 complete independent simulated incubation
+times from the default model. Generation uses seed 20260323 and is recorded in
+`data-raw/incubation_example.R`. These data illustrate the interface and test
+software behavior; agreement with the generating distribution is not external
+validation. Real observations with censoring or uncertain exposure times require
+appropriate likelihoods rather than a histogram of completed cases alone.
+
+```{r}
+#| fig-height: 2.2
+#| fig-width: 7
+par(mfrow = c(1, 2))
+plot_incubation_data(incubation_example$incubation_days)
+plot_incubation(type = "survival")
+```
+
+The histogram compares complete observations with a fixed density.
+The survival curve shows the proportion of eventual symptomatic infections
+whose symptoms have not appeared, not the proportion of all exposed people
+infected or infectious.
+
+## Reference
+
+Lessler J, Reich NG, Brookmeyer R, Perl TM, Nelson KE, Cummings DAT (2009).
+Incubation periods of acute respiratory viral infections: a systematic review.
+*Lancet Infectious Diseases* 9:291–300.
+[doi:10.1016/S1473-3099(09)70069-6](https://doi.org/10.1016/S1473-3099(09)70069-6).
