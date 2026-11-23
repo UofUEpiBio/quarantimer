@@ -1,6 +1,12 @@
 url: https://UofUEpiBio.github.io/quarantimer/
 template:
   bootstrap: 5
+  light-switch: false
+  bslib:
+    brand: pkgdown/brand/_brand.yml
+
+navbar:
+  bg: light
 
 articles:
 - title: Model
