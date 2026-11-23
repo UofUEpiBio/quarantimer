@@ -2,26 +2,33 @@
 % Please edit documentation in R/d_incubation.R
 \name{d_incubation}
 \alias{d_incubation}
-\title{Density function for an incubation period model}
+\title{Density for the incubation period}
 \usage{
 d_incubation(t, model = "lessler_2009")
 }
 \arguments{
-\item{t}{vector of quantiles}
+\item{t}{Numeric vector of times in days since infection.}
 
-\item{model}{A character string specifying the incubation period model.
-Must be one of \code{"lessler_2009"} or \code{"morgenstern_2026"}.
-Defaults to \code{"lessler_2009"}.}
+\item{model}{Character model identifier: \code{"lessler_2009"} (default)
+or \code{"morgenstern_2026"}.}
 }
 \value{
-A vector of densities corresponding to the probability input
+Numeric vector of densities (per day). Missing values propagate.
 }
 \description{
-Density function for an incubation period model
+The distribution describes time from infection to symptom onset among
+infected individuals who develop symptoms. It is not an infection probability
+or a distribution of time to infectiousness.
+}
+\details{
+Uses the corresponding lognormal function in \link[stats:Lognormal]{stats::Lognormal}.
+See \code{\link[=incubation_model]{incubation_model()}} for parameter provenance and assumptions.
 }
 \examples{
-d_incubation(10)
-
-d_incubation(10, "morgenstern_2026")
-
+d_incubation(c(10, 14))
+d_incubation(14, model = "morgenstern_2026")
+}
+\seealso{
+\code{\link[=incubation_model]{incubation_model()}}, \code{\link[=d_incubation]{d_incubation()}}, \code{\link[=p_incubation]{p_incubation()}},
+\code{\link[=q_incubation]{q_incubation()}}, \code{\link[=r_incubation]{r_incubation()}}, \code{\link[=plot_incubation]{plot_incubation()}}
 }

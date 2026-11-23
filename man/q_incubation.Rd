@@ -2,28 +2,33 @@
 % Please edit documentation in R/q_incubation.R
 \name{q_incubation}
 \alias{q_incubation}
-\title{Quantile function for an incubation period model}
+\title{Quantile for the incubation period}
 \usage{
 q_incubation(p, model = "lessler_2009")
 }
 \arguments{
-\item{p}{vector of probabilities}
+\item{p}{Numeric vector of probabilities between zero and one.}
 
-\item{model}{A character string specifying the incubation period model.
-Must be one of \code{"lessler_2009"} or \code{"morgenstern_2026"}.
-Defaults to \code{"lessler_2009"}.}
+\item{model}{Character model identifier: \code{"lessler_2009"} (default)
+or \code{"morgenstern_2026"}.}
 }
 \value{
-A vector of quantiles corresponding to the probability input
+Numeric vector of incubation times in days. Missing values propagate.
 }
 \description{
-Quantile function for an incubation period model
+The distribution describes time from infection to symptom onset among
+infected individuals who develop symptoms. It is not an infection probability
+or a distribution of time to infectiousness.
+}
+\details{
+Uses the corresponding lognormal function in \link[stats:Lognormal]{stats::Lognormal}.
+See \code{\link[=incubation_model]{incubation_model()}} for parameter provenance and assumptions.
 }
 \examples{
-# median incubation period:
-q_incubation(0.5)
-
-# 25th percentile incubation period under the Morgenstern 2026 model:
-q_incubation(0.25, "morgenstern_2026")
-
+q_incubation(c(0.5, 0.95))
+q_incubation(0.95, model = "morgenstern_2026")
+}
+\seealso{
+\code{\link[=incubation_model]{incubation_model()}}, \code{\link[=d_incubation]{d_incubation()}}, \code{\link[=p_incubation]{p_incubation()}},
+\code{\link[=q_incubation]{q_incubation()}}, \code{\link[=r_incubation]{r_incubation()}}, \code{\link[=plot_incubation]{plot_incubation()}}
 }

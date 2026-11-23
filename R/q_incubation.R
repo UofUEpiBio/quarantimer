@@ -1,21 +1,20 @@
-#' Quantile function for an incubation period model
+#' Quantile for the incubation period
 #'
-#' @param p vector of probabilities
-#' @param model A character string specifying the incubation period model.
-#'   Must be one of \code{"lessler_2009"} or \code{"morgenstern_2026"}.
-#'   Defaults to \code{"lessler_2009"}.
+#' The distribution describes time from infection to symptom onset among
+#' infected individuals who develop symptoms. It is not an infection probability
+#' or a distribution of time to infectiousness.
 #'
-#' @return A vector of quantiles corresponding to the probability input
-#'
+#' @param p Numeric vector of probabilities between zero and one.
+#' @inheritParams incubation_model
+#' @return Numeric vector of incubation times in days. Missing values propagate.
+#' @details Uses the corresponding lognormal function in [stats::Lognormal].
+#'   See [incubation_model()] for parameter provenance and assumptions.
+#' @seealso [incubation_model()], [d_incubation()], [p_incubation()],
+#'   [q_incubation()], [r_incubation()], [plot_incubation()]
 #' @importFrom stats qlnorm
-#'
 #' @examples
-#' # median incubation period:
-#' q_incubation(0.5)
-#'
-#' # 25th percentile incubation period under the Morgenstern 2026 model:
-#' q_incubation(0.25, "morgenstern_2026")
-#'
+#' q_incubation(c(0.5, 0.95))
+#' q_incubation(0.95, model = "morgenstern_2026")
 #' @export
 q_incubation <- function(p, model = "lessler_2009") {
   inc <- incubation_model(model)

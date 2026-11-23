@@ -1,0 +1,22 @@
+library(quarantimer)
+for (model in c("lessler_2009", "morgenstern_2026")) {
+  p <- c(0.01, 0.5, 0.95, 0.99)
+  expect_equal(p_incubation(q_incubation(p, model), model), p)
+  expect_equal(integrate(function(t) d_incubation(t, model), 0, Inf)$value, 1,
+               tolerance = 1e-6)
+}
+expect_equal(nrow(incubation_example), 200L)
+set.seed(20260323)
+expect_equal(incubation_example$incubation_days, r_incubation(200))
+path <- tempfile(fileext = ".pdf")
+grDevices::pdf(path)
+curve <- plot_incubation(type = "survival")
+expect_true(all(diff(curve$value) <= 0))
+expect_equal(curve$value[1], 1)
+h <- plot_incubation_data(incubation_example$incubation_days)
+expect_equal(sum(h$counts), 200L)
+expect_error(plot_incubation(days = c(1, 0)))
+expect_error(plot_incubation_data(c(1, NA)))
+expect_error(plot_incubation(model = "unknown"))
+grDevices::dev.off()
+unlink(path)

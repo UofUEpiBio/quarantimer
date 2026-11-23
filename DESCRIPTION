@@ -8,3 +8,9 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
+Depends: R (>= 3.6.0)
+Imports: graphics, stats, utils
+Suggests: tinytest, knitr, rmarkdown
+LazyData: true
+URL: https://UofUEpiBio.github.io/quarantimer/, https://github.com/UofUEpiBio/quarantimer
+BugReports: https://github.com/UofUEpiBio/quarantimer/issues

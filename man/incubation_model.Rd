@@ -2,25 +2,42 @@
 % Please edit documentation in R/incubation_model.R
 \name{incubation_model}
 \alias{incubation_model}
-\title{Specify an incubation period model}
+\title{Parameters of a lognormal incubation model}
 \usage{
 incubation_model(model = c("lessler_2009", "morgenstern_2026"))
 }
 \arguments{
-\item{model}{A character string specifying the incubation period model.
-Must be one of \code{"lessler_2009"} or \code{"morgenstern_2026"}.
-Defaults to \code{"lessler_2009"}.}
+\item{model}{Character model identifier: \code{"lessler_2009"} (default)
+or \code{"morgenstern_2026"}.}
 }
 \value{
-A named list containing the model name, probability distribution,
-and parameters used to define the incubation period distribution.
+List with \code{distribution} (always \code{"lnorm"}), \code{meanlog}, and
+\code{sdlog}. Parameters describe the natural logarithm of time in days,
+not the arithmetic mean and standard deviation.
 }
 \description{
-Specify an incubation period model
+Parameters of a lognormal incubation model
+}
+\details{
+The Lessler model uses meanlog = 2.526 and sdlog = 0.207,
+consistent with the published measles median of 12.5 days and dispersion
+factor 1.23. The alternative uses meanlog = 2.62 and sdlog = 0.23;
+its identifier and values are retained from the original implementation.
+A bibliographic source for that alternative has not been established.
+Both distributions condition on infection followed by symptom onset.
 }
 \examples{
-incubation_model()
-
+pars <- incubation_model()
+exp(pars$meanlog) # median in days
+exp(pars$meanlog + pars$sdlog^2 / 2) # mean in days
 incubation_model("morgenstern_2026")
-
+}
+\references{
+Lessler J et al. (2009). Incubation periods of acute respiratory
+viral infections: a systematic review. Lancet Infectious Diseases 9:291-300.
+\doi{10.1016/S1473-3099(09)70069-6}.
+}
+\seealso{
+\code{\link[=d_incubation]{d_incubation()}}, \code{\link[=p_incubation]{p_incubation()}}, \code{\link[=q_incubation]{q_incubation()}},
+\code{\link[=r_incubation]{r_incubation()}}, \code{\link[=plot_incubation]{plot_incubation()}}
 }

@@ -2,26 +2,34 @@
 % Please edit documentation in R/r_incubation.R
 \name{r_incubation}
 \alias{r_incubation}
-\title{Generarate random deviates for an incubation period model}
+\title{Random generation for the incubation period}
 \usage{
 r_incubation(n, model = "lessler_2009")
 }
 \arguments{
-\item{n}{number of random observations}
+\item{n}{Number of draws; a vector of length greater than one requests that many draws.}
 
-\item{model}{A character string specifying the incubation period model.
-Must be one of \code{"lessler_2009"} or \code{"morgenstern_2026"}.
-Defaults to \code{"lessler_2009"}.}
+\item{model}{Character model identifier: \code{"lessler_2009"} (default)
+or \code{"morgenstern_2026"}.}
 }
 \value{
-A vector of random incubation time
+Numeric vector of simulated incubation times in days. Missing values propagate.
 }
 \description{
-Generarate random deviates for an incubation period model
+The distribution describes time from infection to symptom onset among
+infected individuals who develop symptoms. It is not an infection probability
+or a distribution of time to infectiousness.
+}
+\details{
+Uses the corresponding lognormal function in \link[stats:Lognormal]{stats::Lognormal}.
+See \code{\link[=incubation_model]{incubation_model()}} for parameter provenance and assumptions.
 }
 \examples{
-r_incubation(10)
-
-r_incubation(10, "morgenstern_2026")
-
+set.seed(42)
+r_incubation(5)
+r_incubation(5, model = "morgenstern_2026")
+}
+\seealso{
+\code{\link[=incubation_model]{incubation_model()}}, \code{\link[=d_incubation]{d_incubation()}}, \code{\link[=p_incubation]{p_incubation()}},
+\code{\link[=q_incubation]{q_incubation()}}, \code{\link[=r_incubation]{r_incubation()}}, \code{\link[=plot_incubation]{plot_incubation()}}
 }
