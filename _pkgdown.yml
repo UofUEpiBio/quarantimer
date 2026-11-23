@@ -1,0 +1,22 @@
+url: https://UofUEpiBio.github.io/quarantimer/
+template:
+  bootstrap: 5
+
+articles:
+- title: Model
+  contents:
+  - model
+
+reference:
+- title: Incubation distributions
+  contents:
+  - incubation_model
+  - d_incubation
+  - p_incubation
+  - q_incubation
+  - r_incubation
+- title: Example data and visualization
+  contents:
+  - incubation_example
+  - plot_incubation
+  - plot_incubation_data

@@ -41,8 +41,8 @@ parameters; its bibliographic provenance remains unverified.
 
 ## Mathematical documentation and development
 
-Read the [Quarto model vignette](vignettes/model.qmd) or the
-[rendered HTML](inst/doc/model.html). It derives the implemented distribution,
+Read the [Quarto model vignette](https://github.com/UofUEpiBio/quarantimer/blob/main/vignettes/model.qmd) or the
+[model article](https://UofUEpiBio.github.io/quarantimer/articles/model.html). It derives the implemented distribution,
 symptom-based conditioning, and clearly identifies extensions beyond the API.
 
 Rebuild documentation from the repository root:
@@ -62,3 +62,9 @@ Rendered copies are shipped in `inst/doc`; source is maintained in
 `vignettes/model.qmd` and excluded from R's automatic vignette build.
 Regenerate data with `Rscript data-raw/incubation_example.R`.
 Tests use tinytest.
+
+GitHub Actions checks the package on macOS, Windows, and Linux (release, devel,
+and oldrel). The pkgdown workflow uploads a site artifact and links it on
+same-repository pull requests. Fork PRs still upload artifacts, but cannot post
+comments with their read-only token. Non-PR builds deploy to `gh-pages`;
+GitHub Pages should serve that branch from its root.

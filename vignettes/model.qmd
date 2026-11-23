@@ -2,10 +2,11 @@
 title: "Incubation times and symptom-based risk updates"
 format:
   html:
+    minimal: true
+    html-math-method: mathjax
     embed-resources: true
-  pdf:
-    fontsize: 10pt
-    geometry: margin=0.8in
+fontsize: 10pt
+geometry: margin=0.8in
 execute:
   echo: true
 ---
